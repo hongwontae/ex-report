@@ -1,1 +1,1 @@
-export const inputClassName = 'font-pretendard-semibold border p-[0.2rem] rounded-[0.2rem]';
+export const inputClassName = 'font-pretendard-semibold border p-[0.2rem] rounded-[0.2rem] cursor-pointer';

@@ -1,9 +1,9 @@
 import { Editor } from "@tiptap/react";
-import { TextSelection } from "prosemirror-state";
+import {v4 as createUUID} from 'uuid';
 
 export const handleImage = (
   e: React.ChangeEvent<HTMLInputElement>,
-  editor: Editor
+  setCoverImage : (file : File, uniqueId : string, previewSrc : string)=>void
 ) => {
   const file = e.target.files?.[0];
   if (!file) {
@@ -13,17 +13,7 @@ export const handleImage = (
 
   const previewURL = URL.createObjectURL(file);
 
-  editor
-  ?.chain()
-  .focus()
-  .setImage({ src: previewURL, alt: file.name })
-  .run();
-
-  const { state, view } = editor;
-  
-  const pos = state.doc.content.size;
-  const tr = state.tr.setSelection(TextSelection.create(state.doc, pos));
-  view.dispatch(tr);
+  setCoverImage(file, createUUID(), previewURL)
 
 
 };

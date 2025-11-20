@@ -11,7 +11,7 @@ function PreMatchTextArea({ editor }: EditorType) {
 
   return (
     <>
-      <div className="w-7/12 h-full">
+      <div className="w-full h-full">
         <EditorContent className="h-full" editor={editor}></EditorContent>
       </div>
     </>

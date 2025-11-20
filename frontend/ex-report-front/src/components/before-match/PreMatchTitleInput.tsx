@@ -1,7 +1,7 @@
 function PreMatchTitleInput() {
   return (
     <>
-      <div className="w-7/12">
+      <div className="w-full">
         <input
           type="text"
           className="peer w-full text-3xl font-bold border-b-2 border-gray-300 

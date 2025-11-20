@@ -73,3 +73,11 @@ body {
   margin: 0 auto;
 }
 
+.ProseMirror p.is-empty::before {
+  content: attr(data-placeholder);
+  @apply text-gray-400;
+  float: left;
+  pointer-events: none;
+  height: 0;
+}
+
