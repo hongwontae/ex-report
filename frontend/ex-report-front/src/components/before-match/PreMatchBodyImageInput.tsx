@@ -2,7 +2,7 @@ import { useRef } from "react";
 import { inputClassName } from "./shared-className/befor-match-classname";
 import {handleImages} from '../../pages/before-match/shared-func/images-editor-plus';
 import { Editor } from "@tiptap/react";
-import { useImageStore } from "../../store/pre-match-store/image-stroe";
+import { useImageStore } from "../../store/pre-match-store/image-store";
 
 type Props = {
   children: React.ReactNode;

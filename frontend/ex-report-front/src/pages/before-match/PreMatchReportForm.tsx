@@ -6,12 +6,12 @@ import Image from "@tiptap/extension-image";
 import PreMatchTextArea from "../../components/before-match/PreMatchTextArea";
 import PreMatchSubMenu from "../../components/before-match/PreMatchSubMemu";
 import PreMatchPreview from "../../components/before-match/PreMatchPreview";
-import { useImageStore } from "../../store/pre-match-store/image-stroe";
+import { useImageStore } from "../../store/pre-match-store/image-store";
 
 function PreMatchReportForm() {
 
   const setBodyImagesFiltering = useImageStore(({setBodyImagesFiltering})=>setBodyImagesFiltering);
-  
+
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -28,10 +28,15 @@ function PreMatchReportForm() {
       },
     },
     onUpdate : ({editor})=>{
+      if (!editor.getHTML().includes('img')){
+        return
+      }
       setBodyImagesFiltering(editor)
     }
   
   });
+
+  
 
   return (
     <>
@@ -39,7 +44,7 @@ function PreMatchReportForm() {
         <div className="grid grid-rows-[0.1fr_1fr] grid-cols-[1.3fr_1fr] h-full gap-4">
           <PreMatchSubMenu editor={editor}></PreMatchSubMenu>
           <PreMatchTextArea editor={editor}></PreMatchTextArea>
-          <PreMatchPreview></PreMatchPreview>
+          <PreMatchPreview editor={editor}></PreMatchPreview>
         </div>
       </section>
     </>

@@ -1,4 +1,3 @@
-import { Editor } from "@tiptap/react";
 import {v4 as createUUID} from 'uuid';
 
 export const handleImage = (
