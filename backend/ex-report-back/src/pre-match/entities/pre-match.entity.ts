@@ -11,7 +11,7 @@ export class PreMatchEntity {
     @Column()
     title : string;
 
-    @Column()
+    @Column({type : 'text'})
     content : string;
 
     @CreateDateColumn()

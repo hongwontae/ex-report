@@ -11,14 +11,14 @@ import { PreMatchService } from './pre-match.service';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { PrematchBodyDto } from './dtos/pre-match-body.dto';
 import { FilesValidationPipe } from '../custom/pipes/FilesValidationPipe';
-import {BodyImagesUniqueIDArrPipe} from '../custom/pipes/BodyImagesUniqueIDArrPipe';
+import { BodyImagesUniqueIDArrPipe } from '../custom/pipes/BodyImagesUniqueIDArrPipe';
 import * as multer from 'multer';
 
-@UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
 @Controller('pre-match')
 export class PreMatchController {
   constructor(private prematchService: PreMatchService) {}
 
+  @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
   @Post('post/save')
   @UseInterceptors(
     FileFieldsInterceptor(
@@ -35,14 +35,20 @@ export class PreMatchController {
       coverImage: Express.Multer.File[];
       bodyImages: Express.Multer.File[];
     },
-    @Body('bodyImagesUniqueIDArr', new BodyImagesUniqueIDArrPipe()) bodyImagesUniqueIDArr : string[],
+
+    @Body('bodyImagesUniqueIDArr', new BodyImagesUniqueIDArrPipe())
+    bodyImagesUniqueIDArr: string[],
     @Body() body: PrematchBodyDto,
   ) {
-    console.log(bodyImagesUniqueIDArr);
-    console.log(body);
-    console.log(files.coverImage)
-    console.log(files.bodyImages)
+    const result = await this.prematchService.prematchPostSave(
+      body,
+      bodyImagesUniqueIDArr,
+      files.coverImage,
+      files.bodyImages,
+    );
+
+    console.log(result);
+
+    return result;
   }
-
-
 }
