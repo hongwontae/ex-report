@@ -2,7 +2,7 @@ import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { PreMatchEntity } from "./pre-match.entity";
 
 @Entity('prematch_body_images')
-export class PrematchBodyImagesEntity{
+export class PreMatchBodyImagesEntity{
 
     @PrimaryGeneratedColumn()
     id : number;

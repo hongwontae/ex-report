@@ -2,8 +2,8 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { PreMatchEntity } from './entities/pre-match.entity';
-import { PrematchBodyImagesEntity } from './entities/pre-match-body-images';
-import { PrematchCoverImageEntity } from './entities/pre-match-cover-image';
+import { PreMatchBodyImagesEntity } from './entities/pre-match-body-images.entity';
+import {  PreMatchCoverImageEntity} from './entities/pre-match-cover-image.entity';
 import { PrematchPostType } from '../types/before-match-types/pre-types';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 
@@ -11,15 +11,15 @@ import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 export class PreMatchService {
   constructor(
     @InjectRepository(PreMatchEntity)
-    private readonly prematchRepository: Repository<PreMatchEntity>,
-    @InjectRepository(PrematchBodyImagesEntity)
-    private readonly prematchBodyImageRepository: Repository<PrematchBodyImagesEntity>,
-    @InjectRepository(PrematchCoverImageEntity)
-    private readonly prematchCoverImageRepository: Repository<PrematchCoverImageEntity>,
+    private readonly preMatchRepository: Repository<PreMatchEntity>,
+    @InjectRepository(PreMatchBodyImagesEntity)
+    private readonly preMatchBodyImageRepository: Repository<PreMatchBodyImagesEntity>,
+    @InjectRepository(PreMatchCoverImageEntity)
+    private readonly preMatchCoverImageRepository: Repository<PreMatchCoverImageEntity>,
     private readonly cloudinaryService: CloudinaryService,
   ) {}
 
-  async prematchPostSave(
+  async preMatchPostSave(
     prematch: PrematchPostType,
     bodyImagesUniqueIDArr: string[],
     coverImage: Express.Multer.File[],
@@ -29,19 +29,19 @@ export class PreMatchService {
       throw new BadRequestException('Cover Image So Many');
     }
 
-    const firstPrematch = this.prematchRepository.create({
+    const firstPrematch = this.preMatchRepository.create({
       title: prematch.title,
       content: prematch.content,
     });
 
     const firstPrematchResult =
-      await this.prematchRepository.save(firstPrematch);
+      await this.preMatchRepository.save(firstPrematch);
 
     const coverMetadata = await this.cloudinaryService.uploadImage(
       coverImage[0],
     );
 
-    const coverImageResult = this.prematchCoverImageRepository.create({
+    const coverImageResult = this.preMatchCoverImageRepository.create({
       alt: prematch.coverImageUniqueID,
       format: coverMetadata.format,
       public_id: coverMetadata.public_id,
@@ -49,7 +49,7 @@ export class PreMatchService {
       match: firstPrematchResult,
     });
 
-    const bodyImagesEntity: PrematchBodyImagesEntity[] = [];
+    const bodyImagesEntity: PreMatchBodyImagesEntity[] = [];
 
     for (const bodyImage of bodyImages) {
       let i = 0;
@@ -57,7 +57,7 @@ export class PreMatchService {
       const bodyImageMetadata =
         await this.cloudinaryService.uploadImage(bodyImage);
 
-      const bodyImageResult = this.prematchBodyImageRepository.create({
+      const bodyImageResult = this.preMatchBodyImageRepository.create({
         alt: bodyImagesUniqueIDArr[i++],
         public_id: bodyImageMetadata.public_id,
         format: bodyImageMetadata.format,
@@ -76,7 +76,7 @@ export class PreMatchService {
     });
     console.log(newBodyContent);
 
-    const updatedPrematch = await this.prematchRepository.findOne({
+    const updatedPrematch = await this.preMatchRepository.findOne({
       where: { id: firstPrematchResult.id },
     });
     if (!updatedPrematch) {
@@ -86,9 +86,9 @@ export class PreMatchService {
 
     updatedPrematch.content = newBodyContent;
 
-    const finalPrematch = await this.prematchRepository.save(updatedPrematch);
-    const cover = await  this.prematchCoverImageRepository.save(coverImageResult);
-    const images = await this.prematchBodyImageRepository.save(bodyImagesEntity);
+    const finalPrematch = await this.preMatchRepository.save(updatedPrematch);
+    const cover = await  this.preMatchCoverImageRepository.save(coverImageResult);
+    const images = await this.preMatchBodyImageRepository.save(bodyImagesEntity);
 
     return { finalPrematch, cover, images };
   }

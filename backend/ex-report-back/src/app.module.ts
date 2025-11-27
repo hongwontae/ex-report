@@ -4,8 +4,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { ConfigModule } from '@nestjs/config';
 import { PreMatchEntity } from './pre-match/entities/pre-match.entity';
-import { PrematchBodyImagesEntity } from './pre-match/entities/pre-match-body-images';
-import { PrematchCoverImageEntity } from './pre-match/entities/pre-match-cover-image';
+import { PreMatchBodyImagesEntity } from './pre-match/entities/pre-match-body-images.entity';
+import { PreMatchCoverImageEntity } from './pre-match/entities/pre-match-cover-image.entity';
 
 @Module({
   imports: [
@@ -26,8 +26,8 @@ import { PrematchCoverImageEntity } from './pre-match/entities/pre-match-cover-i
       password: '1234',
       entities: [
         PreMatchEntity,
-        PrematchBodyImagesEntity,
-        PrematchCoverImageEntity,
+        PreMatchBodyImagesEntity,
+        PreMatchCoverImageEntity,
       ],
       synchronize: true,
     }),

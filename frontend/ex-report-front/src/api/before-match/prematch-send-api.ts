@@ -37,6 +37,6 @@ export const PrematchSendPost = async (
         throw new Error('response ok 에러')
     }
 
-    console.log(await response.json());
+    console.log(await response.json()); 
 
 };

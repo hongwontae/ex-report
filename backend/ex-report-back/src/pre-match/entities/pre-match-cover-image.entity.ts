@@ -1,8 +1,8 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { PreMatchEntity } from "./pre-match.entity";
 
 @Entity('prematch_cover_image')
-export class PrematchCoverImageEntity{
+export class PreMatchCoverImageEntity{
     
     @PrimaryGeneratedColumn()
     id : number;

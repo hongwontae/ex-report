@@ -1,6 +1,6 @@
 import { IsString } from "class-validator";
 
-export class PrematchBodyDto {
+export class PreMatchBodyDto {
 
     @IsString()
     title : string;

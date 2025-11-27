@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany, OneToOne } from "typeorm";
-import { PrematchCoverImageEntity } from "./pre-match-cover-image";
-import { PrematchBodyImagesEntity } from "./pre-match-body-images";
+import { PreMatchCoverImageEntity } from "./pre-match-cover-image.entity";
+import { PreMatchBodyImagesEntity } from "./pre-match-body-images.entity";
 
 @Entity('prematch')
 export class PreMatchEntity {
@@ -20,11 +20,11 @@ export class PreMatchEntity {
     @UpdateDateColumn()
     updatedAt : Date;
 
-    @OneToOne(()=>PrematchCoverImageEntity, (cover)=>cover.match)
-    coverImage : PrematchCoverImageEntity;
+    @OneToOne(()=>PreMatchCoverImageEntity, (cover)=>cover.match)
+    coverImage : PreMatchCoverImageEntity;
 
-    @OneToMany(()=>PrematchBodyImagesEntity, (body)=>body.match)
-    bodyImages : PrematchBodyImagesEntity[];
+    @OneToMany(()=>PreMatchBodyImagesEntity, (body)=>body.match)
+    bodyImages : PreMatchBodyImagesEntity[];
 
     
 

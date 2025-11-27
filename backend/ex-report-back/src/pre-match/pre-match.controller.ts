@@ -9,14 +9,14 @@ import {
 } from '@nestjs/common';
 import { PreMatchService } from './pre-match.service';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
-import { PrematchBodyDto } from './dtos/pre-match-body.dto';
+import { PreMatchBodyDto } from './dtos/pre-match-body.dto';
 import { FilesValidationPipe } from '../custom/pipes/FilesValidationPipe';
 import { BodyImagesUniqueIDArrPipe } from '../custom/pipes/BodyImagesUniqueIDArrPipe';
 import * as multer from 'multer';
 
 @Controller('pre-match')
 export class PreMatchController {
-  constructor(private prematchService: PreMatchService) {}
+  constructor(private preMatchService: PreMatchService) {}
 
   @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
   @Post('post/save')
@@ -29,7 +29,7 @@ export class PreMatchController {
       { storage: multer.memoryStorage() },
     ),
   )
-  async prematchPostSave(
+  async preMatchPostSave(
     @UploadedFiles(new FilesValidationPipe())
     files: {
       coverImage: Express.Multer.File[];
@@ -38,9 +38,9 @@ export class PreMatchController {
 
     @Body('bodyImagesUniqueIDArr', new BodyImagesUniqueIDArrPipe())
     bodyImagesUniqueIDArr: string[],
-    @Body() body: PrematchBodyDto,
+    @Body() body: PreMatchBodyDto,
   ) {
-    const result = await this.prematchService.prematchPostSave(
+    const result = await this.preMatchService.preMatchPostSave(
       body,
       bodyImagesUniqueIDArr,
       files.coverImage,
