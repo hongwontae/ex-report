@@ -6,6 +6,7 @@ import { PreMatchBodyImagesEntity } from './entities/pre-match-body-images.entit
 import {  PreMatchCoverImageEntity} from './entities/pre-match-cover-image.entity';
 import { PrematchPostType } from '../types/before-match-types/pre-types';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
+import {preMatchContentImgSrcTransition} from './shared-func/pre-match.service.fs';
 
 @Injectable()
 export class PreMatchService {
@@ -20,69 +21,64 @@ export class PreMatchService {
   ) {}
 
   async preMatchPostSave(
-    prematch: PrematchPostType,
+    preMatch: PrematchPostType,
     bodyImagesUniqueIDArr: string[],
     coverImage: Express.Multer.File[],
     bodyImages: Express.Multer.File[],
   ) {
+
     if (coverImage.length > 1) {
       throw new BadRequestException('Cover Image So Many');
     }
 
     const firstPrematch = this.preMatchRepository.create({
-      title: prematch.title,
-      content: prematch.content,
+      title: preMatch.title,
+      content: preMatch.content,
     });
 
     const firstPrematchResult =
       await this.preMatchRepository.save(firstPrematch);
 
-    const coverMetadata = await this.cloudinaryService.uploadImage(
+    const coverImageUploadedMetadata = await this.cloudinaryService.uploadImage(
       coverImage[0],
     );
 
     const coverImageResult = this.preMatchCoverImageRepository.create({
-      alt: prematch.coverImageUniqueID,
-      format: coverMetadata.format,
-      public_id: coverMetadata.public_id,
-      secure_url: coverMetadata.secure_url,
+      alt: preMatch.coverImageUniqueID,
+      format: coverImageUploadedMetadata.format,
+      public_id: coverImageUploadedMetadata.public_id,
+      secure_url: coverImageUploadedMetadata.secure_url,
       match: firstPrematchResult,
     });
 
-    const bodyImagesEntity: PreMatchBodyImagesEntity[] = [];
+    const bodyImagesEntity : PreMatchBodyImagesEntity[] = [];
 
     for (const bodyImage of bodyImages) {
       let i = 0;
 
-      const bodyImageMetadata =
+      const bodyImagesUploadedMetadata =
         await this.cloudinaryService.uploadImage(bodyImage);
 
-      const bodyImageResult = this.preMatchBodyImageRepository.create({
+      const bodyImagesResults = this.preMatchBodyImageRepository.create({
         alt: bodyImagesUniqueIDArr[i++],
-        public_id: bodyImageMetadata.public_id,
-        format: bodyImageMetadata.format,
-        secure_url: bodyImageMetadata.secure_url,
+        public_id: bodyImagesUploadedMetadata.public_id,
+        format: bodyImagesUploadedMetadata.format,
+        secure_url: bodyImagesUploadedMetadata.secure_url,
         match: firstPrematchResult,
       });
 
-      bodyImagesEntity.push(bodyImageResult);
+      bodyImagesEntity.push(bodyImagesResults);
     }
 
-    let i = 0;
-    const imgRegex = /<img\s+src="blob:[^"]+"/g;
-    const newBodyContent = prematch.content.replace(imgRegex, () => {
-      const url = bodyImagesEntity[i++].secure_url;
-      return `<img src=${url}`;
-    });
-    console.log(newBodyContent);
+    const newBodyContent = preMatchContentImgSrcTransition(preMatch.content,bodyImagesEntity);
 
     const updatedPrematch = await this.preMatchRepository.findOne({
       where: { id: firstPrematchResult.id },
     });
+
     if (!updatedPrematch) {
       return;
     }
-    console.log(updatedPrematch?.content);
 
     updatedPrematch.content = newBodyContent;
 
