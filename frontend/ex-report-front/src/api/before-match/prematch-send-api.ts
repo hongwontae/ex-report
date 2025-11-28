@@ -19,6 +19,7 @@ export const PrematchSendPost = async (
     formData.append('coverImage', coverImage.file);
     formData.append('coverImageUniqueID', JSON.stringify(coverImage.uniqueId));
 
+
     const bodyUniqueIDArr = bodyImages.map((ele, idx, arr)=>{
         formData.append('bodyImages', ele.file);
         return ele.uniqueId;

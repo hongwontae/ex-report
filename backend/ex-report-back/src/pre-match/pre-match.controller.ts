@@ -1,7 +1,9 @@
 import {
   Body,
   Controller,
+  Get,
   Post,
+  Query,
   UploadedFiles,
   UseInterceptors,
   UsePipes,
@@ -18,8 +20,15 @@ import * as multer from 'multer';
 export class PreMatchController {
   constructor(private preMatchService: PreMatchService) {}
 
+  @Get('/intro/show')
+  async preMatchIntroShow(@Query('num') num : number,){
+    const result = await this.preMatchService.preMatchIntroShow(num);
+    console.log(result);
+    return result
+  }
+
   @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
-  @Post('post/save')
+  @Post('/post/save')
   @UseInterceptors(
     FileFieldsInterceptor(
       [
@@ -40,6 +49,8 @@ export class PreMatchController {
     bodyImagesUniqueIDArr: string[],
     @Body() body: PreMatchBodyDto,
   ) {
+    console.log(body);
+    console.log(files);
     const result = await this.preMatchService.preMatchPostSave(
       body,
       bodyImagesUniqueIDArr,
@@ -51,4 +62,5 @@ export class PreMatchController {
 
     return result;
   }
-}
+  }
+
