@@ -6,6 +6,7 @@ import IntroLayout from "../shared/UI/intro/IntroLayout";
 import MainLayout from "../shared/UI/main/MainLayout";
 import HomePage from "../pages/home/Homepage";
 import PreMatchReportForm from "../pages/before-match/PreMatchReportForm";
+import PreMatchReportViewer from "../pages/before-match/PreMatchReportViewer";
 
 const queryClient = new QueryClient();
 
@@ -22,7 +23,7 @@ function App() {
       children : [
         {index : true, element : <HomePage></HomePage>},
         {path : 'pre/form', element : <PreMatchReportForm></PreMatchReportForm>},
-        {path : 'pre/report', element : <div>pre/report</div>},
+        {path : 'pre/report', element : <PreMatchReportViewer></PreMatchReportViewer>},
         {path : 'post/form', element : <div>post form</div>},
         {path : 'post/report', element : <div>Post report</div>}
       ]

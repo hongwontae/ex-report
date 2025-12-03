@@ -27,13 +27,30 @@ export class PreMatchService {
     });
   }
 
+  async preMatchPagingShow(page: number, limit: number) {
+    const skip = (page - 1) * limit;
+    const [items, total] = await this.preMatchRepository.findAndCount({
+      skip,
+      take: limit,
+      order: { createdAt: 'DESC' },
+      relations : ['coverImage']
+    });
+
+    return {
+      items,
+      total,
+      currentPage : page,
+      totalPages : Math.ceil(total/limit)
+    }
+
+  }
+
   async preMatchPostSave(
     preMatch: PrematchPostType,
     bodyImagesUniqueIDArr: string[],
     coverImage: Express.Multer.File[],
     bodyImages: Express.Multer.File[],
   ) {
-
     if (coverImage.length > 1 && coverImage.length <= 0) {
       throw new BadRequestException('Cover Image So Many');
     }
@@ -46,11 +63,9 @@ export class PreMatchService {
     const firstPrematchResult =
       await this.preMatchRepository.save(firstPrematch);
 
-
     const coverImageUploadedMetadata = await this.cloudinaryService.uploadImage(
       coverImage[0],
     );
-
 
     const coverImageResult = this.preMatchCoverImageRepository.create({
       alt: preMatch.coverImageUniqueID,
@@ -59,7 +74,6 @@ export class PreMatchService {
       secure_url: coverImageUploadedMetadata.secure_url,
       match: firstPrematchResult,
     });
-
 
     const bodyImagesEntity: PreMatchBodyImagesEntity[] = [];
 
@@ -87,7 +101,7 @@ export class PreMatchService {
         preMatch.content,
         bodyImagesEntity,
       );
-    } 
+    }
 
     const updatedPrematch = await this.preMatchRepository.findOne({
       where: { id: firstPrematchResult.id },
@@ -97,13 +111,16 @@ export class PreMatchService {
       return;
     }
 
-    updatedPrematch.content = newBodyContent ? newBodyContent : preMatch.content;
+    updatedPrematch.content = newBodyContent
+      ? newBodyContent
+      : preMatch.content;
 
     const finalPrematch = await this.preMatchRepository.save(updatedPrematch);
     const cover =
       await this.preMatchCoverImageRepository.save(coverImageResult);
-    const images =
-      bodyImages ? await this.preMatchBodyImageRepository.save(bodyImagesEntity) : {};
+    const images = bodyImages
+      ? await this.preMatchBodyImageRepository.save(bodyImagesEntity)
+      : {};
 
     return { finalPrematch, cover, images };
   }

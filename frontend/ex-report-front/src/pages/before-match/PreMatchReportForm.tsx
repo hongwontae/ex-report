@@ -3,14 +3,16 @@ import { StarterKit } from "@tiptap/starter-kit";
 import { Placeholder } from "@tiptap/extensions";
 import Image from "@tiptap/extension-image";
 
-import PreMatchTextArea from "../../components/before-match/PreMatchTextArea";
-import PreMatchSubMenu from "../../components/before-match/PreMatchSubMemu";
-import PreMatchPreview from "../../components/before-match/PreMatchPreview";
+import PreMatchTextArea from "../../components/before-match/preMatch-form-components/PreMatchTextArea";
+import PreMatchSubMenu from "../../components/before-match/preMatch-form-components/PreMatchSubMemu";
+import PreMatchPreview from "../../components/before-match/preMatch-form-components/PreMatchPreview";
 import { useImageStore } from "../../store/pre-match-store/image-store";
+import { useRef } from "react";
 
 function PreMatchReportForm() {
 
   const setBodyImagesFiltering = useImageStore(({setBodyImagesFiltering})=>setBodyImagesFiltering);
+  const titleRef = useRef<HTMLInputElement>(null);
 
   const editor = useEditor({
     extensions: [
@@ -36,15 +38,15 @@ function PreMatchReportForm() {
   
   });
 
-  
+
 
   return (
     <>
       <section className="h-full w-full pl-4">
         <div className="grid grid-rows-[0.1fr_1fr] grid-cols-[1.3fr_1fr] h-full gap-4">
-          <PreMatchSubMenu editor={editor}></PreMatchSubMenu>
+          <PreMatchSubMenu editor={editor} titleRef={titleRef}></PreMatchSubMenu>
           <PreMatchTextArea editor={editor}></PreMatchTextArea>
-          <PreMatchPreview editor={editor}></PreMatchPreview>
+          <PreMatchPreview titleRef={titleRef} editor={editor}></PreMatchPreview>
         </div>
       </section>
     </>

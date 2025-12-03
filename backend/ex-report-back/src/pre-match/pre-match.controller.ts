@@ -20,13 +20,21 @@ import * as multer from 'multer';
 export class PreMatchController {
   constructor(private preMatchService: PreMatchService) {}
 
+  // test
   @Get('/intro/show')
   async preMatchIntroShow(@Query('num') num : number,){
     const result = await this.preMatchService.preMatchIntroShow(num);
-    console.log(result);
     return result
   }
 
+  @Get('/test/hello')
+  async preMatchPagingShow(@Query('page') page: number, @Query('limit') limit : number){  
+      const result = await this.preMatchService.preMatchPagingShow(page, limit);
+      console.log(result);
+      return result;
+  }
+
+  
   @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
   @Post('/post/save')
   @UseInterceptors(

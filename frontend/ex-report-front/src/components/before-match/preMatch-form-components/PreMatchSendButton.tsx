@@ -1,10 +1,10 @@
-import { useImageStore } from "../../store/pre-match-store/image-store";
-import { useTitleStore } from "../../store/pre-match-store/title-store";
+import { useImageStore } from "../../../store/pre-match-store/image-store";
 import { Editor } from "@tiptap/react";
-import { PrematchSendPost as pmsp } from "../../api/before-match/prematch-send-api";
+import { PrematchSendPost as pmsp } from "../../../api/before-match/prematch-send-api";
 
 type Props = {
   editor: Editor;
+  titleRef?: React.RefObject<HTMLInputElement | null>;
 };
 
 interface imageObject {
@@ -13,8 +13,7 @@ interface imageObject {
   previewSrc: string;
 }
 
-function PreMatchSendButton({ editor }: Props) {
-  const title = useTitleStore(({ title }) => title);
+function PreMatchSendButton({ editor, titleRef }: Props) {
   const coverImage = useImageStore(({ coverImage }) => coverImage);
   const bodyImages = useImageStore(({ bodyImages }) => bodyImages);
 
@@ -27,11 +26,20 @@ function PreMatchSendButton({ editor }: Props) {
     pmsp(title, coverImage, bodyImages, content);
   };
 
+  
+
   return (
     <>
       <button
         className="border p-1 rounded-2xl text-2xl"
-        onClick={() => PrematchSendPost(title, coverImage!, bodyImages, editor.getHTML())}
+        onClick={() =>
+          PrematchSendPost(
+            titleRef?.current?.value ?? 'null',
+            coverImage!,
+            bodyImages,
+            editor.getHTML()
+          )
+        }
       >
         Send
       </button>

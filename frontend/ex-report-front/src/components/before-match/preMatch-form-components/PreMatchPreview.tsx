@@ -1,12 +1,13 @@
-import { useImageStore } from "../../store/pre-match-store/image-store";
+import { useImageStore } from "../../../store/pre-match-store/image-store";
 import PreMatchSendButton from "./PreMatchSendButton";
 import { Editor } from "@tiptap/react";
 
 type Props = {
     editor : Editor
+    titleRef : React.RefObject<HTMLInputElement | null>
 }
 
-function PreMatchPreview({editor} : Props){
+function PreMatchPreview({editor, titleRef} : Props){
 
     const coverImage = useImageStore(({coverImage})=>coverImage)
     const setDeleteCoverImage = useImageStore(({deleteCoverImage})=>deleteCoverImage)
@@ -19,7 +20,7 @@ function PreMatchPreview({editor} : Props){
                 <div>MetaData Section</div>
                 <img src={coverImage?.previewSrc}></img>
                 <button onClick={setDeleteCoverImage}>Delete</button>
-                <PreMatchSendButton editor={editor}></PreMatchSendButton>
+                <PreMatchSendButton editor={editor} titleRef={titleRef}></PreMatchSendButton>
             </section>
 
         </>
