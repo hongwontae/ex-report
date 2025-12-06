@@ -21,10 +21,20 @@ export class PreMatchService {
   ) {}
 
   async preMatchIntroShow(num: number) {
-    return await this.preMatchRepository.find({
-      take: num,
-      relations: ['coverImage'],
+    return await this.preMatchRepository
+      .createQueryBuilder('prematch')
+      .leftJoinAndSelect('prematch.coverImage', 'coverImage')
+      .limit(4)
+      .select(['prematch.id', 'prematch.title', 'prematch.content', 'prematch.createdAt', 'coverImage'])
+      .getMany()
+  }
+
+  async preMatchOneShow(id: number) {
+    const preMatch = await this.preMatchRepository.findOne({
+      where: { id: id },
+      relations: ['coverImage', 'bodyImages'],
     });
+    return preMatch;
   }
 
   async preMatchPagingShow(page: number, limit: number) {
@@ -33,16 +43,15 @@ export class PreMatchService {
       skip,
       take: limit,
       order: { createdAt: 'DESC' },
-      relations : ['coverImage']
+      relations: ['coverImage'],
     });
 
     return {
       items,
       total,
-      currentPage : page,
-      totalPages : Math.ceil(total/limit)
-    }
-
+      currentPage: page,
+      totalPages: Math.ceil(total / limit),
+    };
   }
 
   async preMatchPostSave(

@@ -27,6 +27,12 @@ export class PreMatchController {
     return result
   }
 
+  @Get('/show/one')
+  async preMatchOneShow(@Query('id') id : number){
+    const result = await this.preMatchService.preMatchOneShow(id);
+    return result
+  }
+
   @Get('/test/hello')
   async preMatchPagingShow(@Query('page') page: number, @Query('limit') limit : number){  
       const result = await this.preMatchService.preMatchPagingShow(page, limit);
